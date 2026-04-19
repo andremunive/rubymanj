@@ -24,6 +24,13 @@ const routes: Routes = [
             (m) => m.ClientsModule
           ),
       },
+      {
+        path: 'entrenamiento',
+        loadChildren: () =>
+          import('../../features/trainings/trainings.module').then(
+            (m) => m.TrainingsModule
+          ),
+      },
     ],
   },
 ];
