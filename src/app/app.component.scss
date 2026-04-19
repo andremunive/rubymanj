@@ -2,3 +2,26 @@
   display: block;
   min-height: 100vh;
 }
+
+.app-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ruby-bg-white);
+
+  &__spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.spin {
+  animation: appSpin 0.9s linear infinite;
+}
+
+@keyframes appSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

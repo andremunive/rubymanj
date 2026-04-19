@@ -1,0 +1,63 @@
+.dashboard {
+  padding: 32px 24px;
+
+  &__greeting {
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-family: var(--font-serif);
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 500;
+    color: var(--ruby-text);
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+
+  &__name {
+    color: var(--ruby-primary-dark);
+  }
+
+  &__date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+  }
+
+  &__fecha {
+    font-size: 15px;
+    color: var(--ruby-text-muted);
+    text-transform: capitalize;
+  }
+
+  &__hora {
+    font-size: 13px;
+    color: var(--ruby-text-soft);
+  }
+
+  &__cards {
+    display: grid;
+    gap: 16px;
+  }
+
+  &__card {
+    background: #fff;
+    border: 1px solid var(--ruby-border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  &__card--placeholder {
+    border-style: dashed;
+    background: var(--ruby-bg-card-soft);
+  }
+
+  &__placeholder-text {
+    color: var(--ruby-text-soft);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    text-align: center;
+  }
+}

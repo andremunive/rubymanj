@@ -1,0 +1,45 @@
+# Supabase CLI config — project-scoped (no credentials stored here)
+# Run: supabase init  (if starting from scratch)
+# Run: supabase link --project-ref <YOUR_PROJECT_REF>  to link to a remote project
+# Run: supabase db push  to apply migrations
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[auth]
+enabled = true
+# site_url = "http://localhost:4200"
+# additional_redirect_urls = []
+jwt_expiry = 3600
+enable_signup = false  # trainer creates clients; self-signup is disabled
+
+[auth.email]
+enable_signup = false
+double_confirm_changes = true
+enable_confirmations = false
+
+[functions]
+# Edge Functions config — none in Phase 1 (all logic is SQL/PL-pgSQL)

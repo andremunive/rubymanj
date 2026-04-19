@@ -1,0 +1,281 @@
+/* ---- Layout Cliente: mobile-first ---- */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.client-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--ruby-bg-lavender);
+
+  // ---- Sidebar: oculto en mobile, visible en desktop ----
+  &__sidebar {
+    display: none;
+  }
+
+  // ---- Body (header + contenido + bottom nav) ----
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  // ---- Header mobile ----
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 56px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--ruby-border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  // ---- Contenido principal ----
+  &__content {
+    flex: 1;
+    // Espacio inferior para que el bottom nav no tape el contenido
+    padding-bottom: 72px;
+    background: var(--ruby-bg-lavender);
+  }
+
+  // ---- Bottom nav (mobile) ----
+  &__bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: #ffffff;
+    border-top: 1px solid var(--ruby-border);
+    display: flex;
+    align-items: stretch;
+    z-index: 20;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-shadow: 0 -4px 16px -4px rgba(107, 45, 135, 0.1);
+  }
+}
+
+/* ---- Sidebar desktop (>= 768px) ---- */
+@media (min-width: 768px) {
+  .client-layout {
+    &__sidebar {
+      display: flex;
+      flex-direction: column;
+      width: 220px;
+      flex-shrink: 0;
+      background: #ffffff;
+      border-right: 1px solid var(--ruby-border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    // Ocultar header mobile y bottom nav en desktop
+    &__header {
+      display: none;
+    }
+
+    &__content {
+      padding-bottom: 0;
+      // Centrar el contenido en un max-width de 480px
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: 0;
+    }
+
+    &__bottom-nav {
+      display: none;
+    }
+  }
+}
+
+/* ---- Sidebar internos ---- */
+
+.client-sidebar {
+  &__header {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--ruby-border);
+  }
+
+  &__brand {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+  }
+
+  &__nav {
+    flex: 1;
+    padding: 12px 8px;
+    overflow-y: auto;
+  }
+
+  &__menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ruby-text-muted);
+    transition: background 140ms, color 140ms;
+
+    &:hover {
+      background: var(--ruby-bg-lavender);
+      color: var(--ruby-text);
+    }
+
+    &--active {
+      background: linear-gradient(135deg, #f6e8fb 0%, #eddcf8 100%);
+      color: var(--ruby-primary-deep);
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__footer {
+    padding: 12px;
+    border-top: 1px solid var(--ruby-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 4px;
+  }
+
+  &__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ruby-primary-light), var(--ruby-primary));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ruby-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__logout {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--ruby-border);
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ruby-text-muted);
+    font-family: var(--font-sans);
+    transition: background 140ms, color 140ms;
+
+    &:hover:not(:disabled) {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* ---- Header mobile internos ---- */
+
+.client-header {
+  &__brand {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+  }
+
+  &__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ruby-primary-light), var(--ruby-primary));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: default;
+  }
+}
+
+/* ---- Bottom nav internos ---- */
+
+.bottom-nav {
+  &__link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--ruby-text-soft);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 6px 0;
+    transition: color 140ms;
+
+    &:hover {
+      color: var(--ruby-primary);
+    }
+
+    &--active {
+      color: var(--ruby-primary);
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__label {
+    line-height: 1;
+  }
+}

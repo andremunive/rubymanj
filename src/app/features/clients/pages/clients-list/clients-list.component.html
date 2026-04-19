@@ -1,0 +1,349 @@
+<!-- Inline dialog: rendered inside the page, managed by a boolean flag -->
+<app-add-student-dialog
+  *ngIf="dialogOpen"
+  (closeDialog)="onDialogClose()"
+></app-add-student-dialog>
+
+<div class="clients-page">
+
+  <!-- ── Page header ── -->
+  <header class="clients-page__header">
+    <nav class="clients-page__breadcrumb" aria-label="Ruta de navegación">
+      <span class="breadcrumb__item">Alumnas</span>
+    </nav>
+    <h1 class="clients-page__title">Mis alumnas</h1>
+  </header>
+
+  <!-- ── Actions card ── -->
+  <div class="clients-page__actions-card">
+
+    <div class="actions-card__left">
+      <!-- Search input -->
+      <div class="search-field" role="search">
+        <svg class="search-field__icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          class="search-field__input"
+          type="search"
+          [formControl]="searchCtrl"
+          placeholder="Buscar alumna por nombre o email…"
+          aria-label="Buscar alumna por nombre o email"
+        />
+      </div>
+
+      <!-- Filter button (non-functional, UI only) -->
+      <button
+        type="button"
+        class="btn-ghost"
+        disabled
+        aria-label="Filtrar (no disponible)"
+        title="Filtros — próximamente"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+        <span>Filtrar</span>
+      </button>
+    </div>
+
+    <!-- Add button -->
+    <button
+      type="button"
+      class="btn-add"
+      (click)="openAddDialog()"
+      aria-label="Añadir nueva alumna"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="12" y1="5" x2="12" y2="19"></line>
+        <line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+      <span>Añadir nueva alumna</span>
+    </button>
+
+  </div>
+
+  <!-- ── Error state ── -->
+  <div *ngIf="error && !loading" class="clients-page__error" role="alert">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="8" x2="12" y2="12"></line>
+      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+    </svg>
+    <span>{{ error }}</span>
+    <button type="button" class="error__retry" (click)="loadClients()">Reintentar</button>
+  </div>
+
+  <!-- ── Table card ── -->
+  <div class="clients-page__table-card" *ngIf="!error">
+
+    <!-- ── Loading skeletons ── -->
+    <ng-container *ngIf="loading">
+      <!-- Desktop skeleton (table) -->
+      <div class="skeleton-table">
+        <div class="skeleton-row" *ngFor="let _ of [1,2,3]">
+          <div class="skeleton-cell skeleton-cell--check"></div>
+          <div class="skeleton-cell skeleton-cell--avatar"></div>
+          <div class="skeleton-cell skeleton-cell--medium"></div>
+          <div class="skeleton-cell skeleton-cell--short"></div>
+          <div class="skeleton-cell skeleton-cell--medium"></div>
+          <div class="skeleton-cell skeleton-cell--short"></div>
+          <div class="skeleton-cell skeleton-cell--short"></div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ── Empty state ── -->
+    <ng-container *ngIf="!loading && items.length === 0">
+      <div class="empty-state">
+        <svg class="empty-state__icon" width="56" height="56" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <h2 class="empty-state__title">Aún no tienes alumnas registradas</h2>
+        <p class="empty-state__subtitle">Agrega tu primera alumna para empezar a gestionarla.</p>
+        <button type="button" class="btn-add" (click)="openAddDialog()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>Añadir primera alumna</span>
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- ── Desktop table (≥1024px) ── -->
+    <ng-container *ngIf="!loading && items.length > 0">
+
+      <div class="table-wrapper">
+        <table class="clients-table" aria-label="Lista de alumnas">
+          <thead>
+            <tr>
+              <th class="col-check" scope="col">
+                <input type="checkbox" aria-label="Seleccionar todas" disabled />
+              </th>
+              <th class="col-alumna" scope="col">Alumna</th>
+              <th class="col-tags hide-tablet" scope="col">Etiquetas</th>
+              <th class="col-date" scope="col">Activación</th>
+              <th class="col-plan" scope="col">Plan</th>
+              <th class="col-status" scope="col">Estado del plan</th>
+              <th class="col-payment" scope="col">Último pago</th>
+              <th class="col-cumplimiento hide-tablet" scope="col">Cumplimiento</th>
+              <th class="col-activity" scope="col">Última actividad</th>
+              <th class="col-menu" scope="col">
+                <span class="sr-only">Acciones</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let client of items" class="clients-table__row">
+
+              <!-- Checkbox -->
+              <td class="col-check">
+                <input
+                  type="checkbox"
+                  [attr.aria-label]="'Seleccionar a ' + client.fullName"
+                  disabled
+                />
+              </td>
+
+              <!-- Alumna: avatar + nombre + email -->
+              <td class="col-alumna">
+                <div class="client-info">
+                  <app-avatar [fullName]="client.fullName" size="md"></app-avatar>
+                  <div class="client-info__text">
+                    <span class="client-info__name">{{ client.fullName }}</span>
+                    <span class="client-info__email">{{ client.email }}</span>
+                  </div>
+                </div>
+              </td>
+
+              <!-- Etiquetas -->
+              <td class="col-tags hide-tablet">
+                <span class="cell-dash">—</span>
+              </td>
+
+              <!-- Activación -->
+              <td class="col-date">
+                {{ client.createdAt | dateBogota }}
+              </td>
+
+              <!-- Plan -->
+              <td class="col-plan">
+                {{ client.currentPlanName }}
+              </td>
+
+              <!-- Estado del plan -->
+              <td class="col-status">
+                <app-status-pill [status]="client.planStatus"></app-status-pill>
+              </td>
+
+              <!-- Último pago -->
+              <td class="col-payment">
+                <ng-container *ngIf="client.lastPaymentDate; else noPago">
+                  {{ client.lastPaymentDate | dateBogota }}
+                </ng-container>
+                <ng-template #noPago>
+                  <span class="cell-dash">—</span>
+                </ng-template>
+              </td>
+
+              <!-- Cumplimiento -->
+              <td class="col-cumplimiento hide-tablet">
+                <span class="cell-dash">—</span>
+              </td>
+
+              <!-- Última actividad -->
+              <td class="col-activity">
+                <span class="cell-dash">—</span>
+              </td>
+
+              <!-- Menú kebab -->
+              <td class="col-menu">
+                <button
+                  type="button"
+                  class="kebab-btn"
+                  [attr.aria-label]="'Más acciones para ' + client.fullName"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                       stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                       stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="5" r="1"></circle>
+                    <circle cx="12" cy="12" r="1"></circle>
+                    <circle cx="12" cy="19" r="1"></circle>
+                  </svg>
+                </button>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── Mobile cards (<640px) ── -->
+      <ul class="mobile-cards" aria-label="Lista de alumnas">
+        <li *ngFor="let client of items" class="mobile-card">
+          <div class="mobile-card__top">
+            <app-avatar [fullName]="client.fullName" size="md"></app-avatar>
+            <div class="mobile-card__info">
+              <span class="mobile-card__name">{{ client.fullName }}</span>
+              <span class="mobile-card__email">{{ client.email }}</span>
+            </div>
+            <button
+              type="button"
+              class="kebab-btn"
+              [attr.aria-label]="'Más acciones para ' + client.fullName"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                   stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="mobile-card__bottom">
+            <app-status-pill [status]="client.planStatus"></app-status-pill>
+            <span class="mobile-card__payment" *ngIf="client.lastPaymentDate">
+              Último pago: {{ client.lastPaymentDate | dateBogota }}
+            </span>
+            <span class="mobile-card__payment" *ngIf="!client.lastPaymentDate">
+              Sin pagos registrados
+            </span>
+          </div>
+        </li>
+      </ul>
+
+      <!-- ── Pagination ── -->
+      <div class="pagination" aria-label="Paginación">
+        <div class="pagination__info">
+          <span>{{ rangeStart }}–{{ rangeEnd }} de {{ total }} elementos</span>
+          <label class="pagination__page-size-label" for="page-size-select">
+            Filas por página:
+          </label>
+          <select
+            id="page-size-select"
+            class="pagination__page-size-select"
+            [value]="pageSize"
+            (change)="onPageSizeChange($event)"
+            aria-label="Filas por página"
+          >
+            <option *ngFor="let opt of pageSizeOptions" [value]="opt">{{ opt }}</option>
+          </select>
+        </div>
+
+        <div class="pagination__controls">
+          <button
+            type="button"
+            class="pagination__btn"
+            (click)="goToFirstPage()"
+            [disabled]="page === 1"
+            aria-label="Primera página"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="11 17 6 12 11 7"></polyline>
+              <polyline points="18 17 13 12 18 7"></polyline>
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="pagination__btn"
+            (click)="goToPrevPage()"
+            [disabled]="page === 1"
+            aria-label="Página anterior"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+
+          <span class="pagination__page-label">Página {{ page }} de {{ totalPages }}</span>
+
+          <button
+            type="button"
+            class="pagination__btn"
+            (click)="goToNextPage()"
+            [disabled]="page >= totalPages"
+            aria-label="Página siguiente"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            class="pagination__btn"
+            (click)="goToLastPage()"
+            [disabled]="page >= totalPages"
+            aria-label="Última página"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="13 17 18 12 13 7"></polyline>
+              <polyline points="6 17 11 12 6 7"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+
+</div>

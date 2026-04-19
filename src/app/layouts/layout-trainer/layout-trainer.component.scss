@@ -1,0 +1,296 @@
+/* ---- Layout Trainer: desktop-first, responsive ---- */
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.trainer-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--ruby-bg-lavender);
+  position: relative;
+
+  // ---- Overlay para mobile cuando el sidebar está abierto ----
+  &__overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(42, 15, 61, 0.35);
+    z-index: 30;
+    backdrop-filter: blur(2px);
+  }
+
+  // ---- Sidebar ----
+  &__sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #ffffff;
+    border-right: 1px solid var(--ruby-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 20px -4px rgba(107, 45, 135, 0.12);
+  }
+
+  &--sidebar-open &__sidebar {
+    transform: translateX(0);
+  }
+
+  &--sidebar-open &__overlay {
+    display: block;
+  }
+
+  // ---- Área principal ----
+  &__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-left: 0;
+    transition: margin-left 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  // ---- Topbar (visible en mobile, oculta en desktop) ----
+  &__topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    height: 56px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--ruby-border);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  &__content {
+    flex: 1;
+    background: var(--ruby-bg-lavender);
+    min-height: 0;
+  }
+}
+
+/* ---- Desktop (≥900px): sidebar siempre visible ---- */
+@media (min-width: 900px) {
+  .trainer-layout {
+    &__overlay {
+      display: none !important;
+    }
+
+    &__sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      transform: translateX(0) !important;
+    }
+
+    &__main {
+      margin-left: 0;
+    }
+
+    &__topbar {
+      display: none;
+    }
+
+    &__content {
+      padding: 32px;
+    }
+  }
+}
+
+/* ---- Sidebar: partes internas ---- */
+
+.sidebar {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--ruby-border);
+  }
+
+  &__brand {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+  }
+
+  &__close-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    padding: 6px;
+    cursor: pointer;
+    color: var(--ruby-text-soft);
+    border-radius: 8px;
+
+    &:hover { background: var(--ruby-bg-lavender); color: var(--ruby-text); }
+
+    @media (min-width: 900px) {
+      display: none;
+    }
+  }
+
+  &__nav {
+    flex: 1;
+    padding: 16px 12px;
+    overflow-y: auto;
+  }
+
+  &__menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ruby-text-muted);
+    transition: background 140ms, color 140ms;
+
+    &:hover {
+      background: var(--ruby-bg-lavender);
+      color: var(--ruby-text);
+    }
+
+    &--active {
+      background: linear-gradient(135deg, #f6e8fb 0%, #eddcf8 100%);
+      color: var(--ruby-primary-deep);
+    }
+  }
+
+  &__link-icon {
+    flex-shrink: 0;
+  }
+
+  &__footer {
+    padding: 16px;
+    border-top: 1px solid var(--ruby-border);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+  }
+
+  &__user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ruby-primary-light), var(--ruby-primary));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__user-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__user-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ruby-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__user-role {
+    font-size: 11px;
+    color: var(--ruby-text-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--ruby-border);
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ruby-text-muted);
+    font-family: var(--font-sans);
+    transition: background 140ms, color 140ms, border-color 140ms;
+
+    &:hover:not(:disabled) {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* ---- Topbar interno ---- */
+
+.topbar {
+  &__menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    padding: 6px;
+    cursor: pointer;
+    color: var(--ruby-text-muted);
+    border-radius: 8px;
+    flex-shrink: 0;
+
+    &:hover { background: var(--ruby-bg-lavender); color: var(--ruby-text); }
+  }
+
+  &__brand {
+    text-decoration: none;
+    color: inherit;
+    display: inline-flex;
+    flex: 1;
+    justify-content: center;
+  }
+
+  &__spacer {
+    width: 34px;
+    flex-shrink: 0;
+  }
+}

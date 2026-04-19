@@ -1,0 +1,89 @@
+<div class="client-layout">
+
+  <!-- Sidebar desktop (>= 768px): reemplaza el bottom nav -->
+  <aside class="client-layout__sidebar" role="navigation" aria-label="Menú principal">
+    <div class="client-sidebar__header">
+      <a routerLink="/client" class="client-sidebar__brand" aria-label="Ir al inicio">
+        <app-logo [size]="16"></app-logo>
+      </a>
+    </div>
+
+    <nav class="client-sidebar__nav">
+      <ul class="client-sidebar__menu" role="list">
+        <li>
+          <a
+            routerLink="/client"
+            routerLinkActive="client-sidebar__link--active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="client-sidebar__link"
+          >
+            <svg class="client-sidebar__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Inicio</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="client-sidebar__footer">
+      <div class="client-sidebar__user" *ngIf="user">
+        <div class="client-sidebar__avatar" aria-hidden="true">
+          {{ user.fullName.charAt(0).toUpperCase() }}
+        </div>
+        <span class="client-sidebar__name">{{ user.fullName }}</span>
+      </div>
+      <button
+        type="button"
+        class="client-sidebar__logout"
+        (click)="logout()"
+        [disabled]="cerrando"
+        aria-label="Cerrar sesión"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+        <span>Salir</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Área principal -->
+  <div class="client-layout__body">
+
+    <!-- Header mobile -->
+    <header class="client-layout__header">
+      <a routerLink="/client" class="client-header__brand" aria-label="Ir al inicio">
+        <app-logo [size]="16"></app-logo>
+      </a>
+      <div class="client-header__avatar" aria-label="Avatar usuario" *ngIf="user">
+        {{ user.fullName.charAt(0).toUpperCase() }}
+      </div>
+    </header>
+
+    <main class="client-layout__content" id="main-content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Bottom nav mobile -->
+    <nav class="client-layout__bottom-nav" aria-label="Navegación principal">
+      <a
+        routerLink="/client"
+        routerLinkActive="bottom-nav__link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="bottom-nav__link"
+        aria-label="Inicio"
+      >
+        <svg class="bottom-nav__icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span class="bottom-nav__label">Inicio</span>
+      </a>
+    </nav>
+
+  </div>
+</div>

@@ -1,1 +1,28 @@
-<router-outlet></router-outlet>
+<!-- Mientras se resuelve la sesión inicial, mostrar spinner centrado -->
+<ng-container *ngIf="sessionReady$ | async; else cargando">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<ng-template #cargando>
+  <div class="app-loading" role="status" aria-label="Cargando aplicación">
+    <div class="app-loading__spinner">
+      <svg
+        width="40"
+        height="40"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="spin"
+      >
+        <circle cx="12" cy="12" r="10" stroke="#ecd9f2" stroke-width="3" />
+        <circle
+          cx="12" cy="12" r="10"
+          stroke="#cb6ce6"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-dasharray="50 80"
+        />
+      </svg>
+    </div>
+  </div>
+</ng-template>
