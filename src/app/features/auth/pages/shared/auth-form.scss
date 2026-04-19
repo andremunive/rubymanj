@@ -1,0 +1,279 @@
+/* Shared styles for login + forgot-password form bodies. */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: var(--font-sans);
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(26px, 3vw, 34px);
+    letter-spacing: -0.025em;
+    color: var(--ruby-text);
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-size: 15px;
+    color: var(--ruby-text-muted);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 380px;
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  &__link {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    color: var(--ruby-link);
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__hint {
+    text-align: center;
+    font-size: 13px;
+    color: var(--ruby-text-soft);
+    line-height: 1.5;
+    margin: 4px 0 0;
+  }
+
+  &__back {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    color: var(--ruby-primary-deep);
+    font-weight: 500;
+    font-size: 14px;
+    text-decoration: none;
+
+    &:hover { color: var(--ruby-primary-dark); }
+  }
+}
+
+/* ---- Field ---- */
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1.5px solid var(--ruby-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 2px 6px -3px rgba(107, 45, 135, 0.18);
+  transition: all 180ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  cursor: text;
+
+  &:focus-within {
+    border-color: var(--ruby-primary);
+    box-shadow:
+      0 0 0 4px rgba(203, 108, 230, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 4px 12px -4px rgba(203, 108, 230, 0.3);
+
+    .field__icon { color: var(--ruby-primary); }
+  }
+
+  &__icon {
+    display: inline-flex;
+    color: var(--ruby-icon-muted);
+    transition: color 180ms;
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ruby-text);
+    letter-spacing: -0.005em;
+    padding: 0;
+  }
+
+  &__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    padding: 4px;
+    cursor: pointer;
+    color: var(--ruby-icon-muted);
+
+    &:hover { color: var(--ruby-primary); }
+  }
+}
+
+/* ---- Remember me checkbox ---- */
+
+.remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ruby-text-muted);
+  font-family: inherit;
+  font-size: 14px;
+
+  &__box {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: #ffffff;
+    border: 1.5px solid var(--ruby-border);
+    box-shadow: inset 0 1px 2px rgba(107, 45, 135, 0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 140ms;
+  }
+
+  &.is-checked .remember__box {
+    background: linear-gradient(180deg, var(--ruby-primary-light), var(--ruby-primary));
+    border: none;
+    box-shadow:
+      0 2px 0 var(--ruby-primary-deep),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* ---- 3D buttons ---- */
+
+.btn-3d {
+  position: relative;
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 16px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  border: none;
+  transition: transform 120ms cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 120ms;
+  overflow: hidden;
+
+  &__label {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__gloss {
+    position: absolute;
+    top: 1px;
+    left: 10px;
+    right: 10px;
+    height: 50%;
+    border-radius: 14px 14px 40px 40px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
+    pointer-events: none;
+  }
+
+  &--primary {
+    color: #ffffff;
+    background: linear-gradient(
+      180deg,
+      var(--ruby-primary-light) 0%,
+      var(--ruby-primary) 60%,
+      var(--ruby-primary-dark) 100%
+    );
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.25) inset,
+      0 6px 14px -6px rgba(107, 45, 135, 0.35),
+      0 2px 4px -2px rgba(107, 45, 135, 0.25);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.3) inset,
+        0 10px 18px -6px rgba(107, 45, 135, 0.4),
+        0 3px 6px -2px rgba(107, 45, 135, 0.28);
+    }
+
+    &:active {
+      transform: translateY(1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.2) inset,
+        0 3px 8px -4px rgba(107, 45, 135, 0.3);
+    }
+  }
+
+  &--secondary {
+    color: var(--ruby-primary-deep);
+    background: linear-gradient(180deg, #ffffff 0%, #fbf2ff 100%);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 1) inset,
+      0 0 0 1px var(--ruby-border),
+      0 4px 10px -4px rgba(107, 45, 135, 0.15);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 0 0 1px var(--ruby-border),
+        0 6px 14px -4px rgba(107, 45, 135, 0.18);
+    }
+
+    &:active {
+      transform: translateY(1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 1) inset,
+        0 0 0 1px var(--ruby-border),
+        0 2px 4px -2px rgba(107, 45, 135, 0.15);
+    }
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(203, 108, 230, 0.45);
+    outline-offset: 2px;
+  }
+
+  &:disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none !important;
+  }
+}

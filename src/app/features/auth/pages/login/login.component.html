@@ -1,0 +1,102 @@
+<app-auth-layout>
+  <form class="auth-form" (ngSubmit)="onSubmit()" novalidate>
+
+    <header class="auth-form__intro">
+      <h1 class="auth-form__title">{{ heading }}</h1>
+      <p class="auth-form__subtitle">{{ subheading }}</p>
+    </header>
+
+    <div class="auth-form__fields">
+
+      <label class="field">
+        <span class="field__icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+            <path d="m3 7 9 6 9-6"></path>
+          </svg>
+        </span>
+        <input
+          class="field__input"
+          type="email"
+          name="email"
+          autocomplete="email"
+          placeholder="tu@correo.com"
+          [(ngModel)]="email"
+          required
+        />
+      </label>
+
+      <label class="field">
+        <span class="field__icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="11" width="16" height="10" rx="2"></rect>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+          </svg>
+        </span>
+        <input
+          class="field__input"
+          [type]="showPassword ? 'text' : 'password'"
+          name="password"
+          autocomplete="current-password"
+          placeholder="Tu contraseña"
+          [(ngModel)]="password"
+          required
+        />
+        <button
+          type="button"
+          class="field__toggle"
+          (click)="togglePassword()"
+          [attr.aria-label]="showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        >
+          <svg *ngIf="showPassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <svg *ngIf="!showPassword" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-10-8-10-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </button>
+      </label>
+
+    </div>
+
+    <div class="auth-form__row">
+      <button
+        type="button"
+        class="remember"
+        (click)="toggleRemember()"
+        [class.is-checked]="remember"
+        [attr.aria-pressed]="remember"
+      >
+        <span class="remember__box" aria-hidden="true">
+          <svg *ngIf="remember" width="12" height="12" viewBox="0 0 24 24" fill="none"
+               stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </span>
+        <span class="remember__label">Recuérdame</span>
+      </button>
+
+      <a class="auth-form__link" routerLink="/auth/forgot-password">
+        ¿Olvidaste tu contraseña?
+      </a>
+    </div>
+
+    <button type="submit" class="btn-3d btn-3d--primary" [disabled]="loading">
+      <span class="btn-3d__label">
+        {{ loading ? 'Iniciando…' : 'Iniciar sesión' }}
+      </span>
+      <span class="btn-3d__gloss" aria-hidden="true"></span>
+    </button>
+
+    <p class="auth-form__hint">
+      ¿Aún no tienes una cuenta? Pídele acceso a Ruby.
+    </p>
+
+  </form>
+</app-auth-layout>

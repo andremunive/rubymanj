@@ -1,0 +1,28 @@
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  line-height: 1;
+
+  &__text {
+    font-style: italic;
+  }
+
+  &__dot {
+    display: inline-block;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 30% 30%,
+      #ffffff,
+      var(--ruby-primary-light) 25%,
+      var(--ruby-primary) 60%,
+      var(--ruby-primary-deep) 100%
+    );
+    margin-left: 2px;
+    box-shadow: 0 2px 4px rgba(107, 45, 135, 0.3);
+    transform: translateY(-2px);
+  }
+}

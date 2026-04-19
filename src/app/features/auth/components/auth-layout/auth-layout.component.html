@@ -1,0 +1,48 @@
+<div class="auth-page">
+
+  <header class="auth-page__header">
+    <a class="auth-page__brand" href="/">
+      <app-ruby-wordmark [size]="30"></app-ruby-wordmark>
+    </a>
+    <div class="auth-page__help">
+      <span class="auth-page__help-label">¿Necesitas ayuda?</span>
+      <a class="auth-page__help-link" href="mailto:ruby@rubyfit.com">Escríbele a Ruby</a>
+      <a class="auth-page__help-short" href="mailto:ruby@rubyfit.com">Ayuda</a>
+    </div>
+  </header>
+
+  <div class="auth-page__decor" aria-hidden="true">
+    <div class="auth-page__floor"></div>
+
+    <div class="auth-page__item auth-page__item--dumbbell">
+      <app-fitness-object type="dumbbell" [size]="200"></app-fitness-object>
+    </div>
+    <div class="auth-page__item auth-page__item--kettlebell">
+      <app-fitness-object type="kettlebell" [size]="180"></app-fitness-object>
+    </div>
+    <div class="auth-page__item auth-page__item--bottle">
+      <app-fitness-object type="bottle" [size]="140"></app-fitness-object>
+    </div>
+    <div class="auth-page__item auth-page__item--sphere-lg">
+      <app-fitness-object type="sphere" [size]="150" [hue]="310"></app-fitness-object>
+    </div>
+    <div class="auth-page__item auth-page__item--sphere-md">
+      <app-fitness-object type="sphere" [size]="60" [hue]="330"></app-fitness-object>
+    </div>
+    <div class="auth-page__item auth-page__item--sphere-sm">
+      <app-fitness-object type="sphere" [size]="48" [hue]="295"></app-fitness-object>
+    </div>
+  </div>
+
+  <main class="auth-page__main">
+    <section class="auth-card" role="region" aria-label="Formulario de acceso">
+      <div class="auth-card__sheen" aria-hidden="true"></div>
+      <ng-content></ng-content>
+    </section>
+  </main>
+
+  <footer class="auth-page__footer">
+    © {{ currentYear }} Ruby · Entrenamiento personal
+  </footer>
+
+</div>

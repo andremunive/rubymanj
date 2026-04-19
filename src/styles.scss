@@ -1,1 +1,47 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --ruby-primary: #cb6ce6;
+  --ruby-primary-deep: #6b2d87;
+  --ruby-primary-light: #e695f5;
+  --ruby-primary-dark: #a044c4;
+  --ruby-primary-shadow: #5a2376;
+  --ruby-bg-lavender: #fbecff;
+  --ruby-bg-white: #fff7fd;
+  --ruby-bg-card: #ffffff;
+  --ruby-bg-card-soft: #fffafd;
+  --ruby-text: #2a0f3d;
+  --ruby-text-muted: #6b4d7a;
+  --ruby-text-soft: #8b6d9a;
+  --ruby-border: #ecd9f2;
+  --ruby-border-soft: #d9bce3;
+  --ruby-placeholder: #b79cc4;
+  --ruby-icon-muted: #a883b3;
+  --ruby-link: #a044c4;
+
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: var(--font-sans);
+  color: var(--ruby-text);
+  background: var(--ruby-bg-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ruby-placeholder);
+}
