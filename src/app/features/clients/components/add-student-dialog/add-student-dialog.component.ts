@@ -11,10 +11,18 @@ import {
   Validators,
 } from '@angular/forms';
 
+import {
+  CLIENT_GOAL_OPTIONS,
+  ClientGoal,
+  GOAL_LABELS,
+} from '../../models/client-goal.model';
+import { ClientsService } from '../../services/clients.service';
+
 export interface AddStudentFormValue {
   fullName: string;
   email: string;
   password: string;
+  goal: ClientGoal | '';
   phone: string;
   birthDate: string;
   notes: string;
@@ -29,16 +37,29 @@ export class AddStudentDialogComponent implements OnInit {
   /** Emits when the user requests to close the dialog (cancel / X button / backdrop). */
   @Output() readonly closeDialog = new EventEmitter<void>();
 
+  /** Emits after a client has been successfully created. Parent should reload the list. */
+  @Output() readonly created = new EventEmitter<void>();
+
   form!: FormGroup;
   showPassword = false;
   submitting = false;
+  submitError: string | null = null;
+
+  /** Options rendered in the "Objetivo" dropdown. */
+  readonly goalOptions = CLIENT_GOAL_OPTIONS.map((code) => ({
+    code,
+    label: GOAL_LABELS[code],
+  }));
 
   /** ISO date string for today in YYYY-MM-DD used as [max] on the birth-date input. */
   readonly today: string = new Date().toLocaleDateString('en-CA', {
     timeZone: 'America/Bogota',
   });
 
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly clientsService: ClientsService,
+  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -54,6 +75,7 @@ export class AddStudentDialogComponent implements OnInit {
         '',
         [Validators.required, Validators.minLength(6)],
       ],
+      goal: ['', Validators.required],
       phone: [''],
       birthDate: [''],
       notes: [''],
@@ -72,6 +94,10 @@ export class AddStudentDialogComponent implements OnInit {
 
   get passwordCtrl(): AbstractControl {
     return this.form.get('password')!;
+  }
+
+  get goalCtrl(): AbstractControl {
+    return this.form.get('goal')!;
   }
 
   get fullNameError(): string | null {
@@ -98,30 +124,58 @@ export class AddStudentDialogComponent implements OnInit {
     return null;
   }
 
+  get goalError(): string | null {
+    const ctrl = this.goalCtrl;
+    if (ctrl.pristine && !this.submitting) return null;
+    if (ctrl.hasError('required')) return 'Selecciona un objetivo.';
+    return null;
+  }
+
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
   onSubmit(): void {
-    this.submitting = true;
     this.form.markAllAsTouched();
+    this.submitError = null;
 
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.submitting) {
+      this.submitting = true;
+      return;
+    }
 
+    this.submitting = true;
     const value: AddStudentFormValue = this.form.getRawValue();
 
-    // TODO: conectar al RPC trainer_create_client
-    // Cuando se implemente: this.clientsService.createClient(value)
-    console.log('TODO submit — trainer_create_client payload:', value);
-
-    this.closeDialog.emit();
+    this.clientsService
+      .createClient({
+        fullName: value.fullName,
+        email: value.email,
+        password: value.password,
+        goal: value.goal as ClientGoal,
+        phone: value.phone,
+        birthDate: value.birthDate,
+        notes: value.notes,
+      })
+      .then(() => {
+        this.created.emit();
+        this.closeDialog.emit();
+      })
+      .catch((err: Error) => {
+        this.submitError = err.message ?? 'No se pudo crear la alumna.';
+      })
+      .finally(() => {
+        this.submitting = false;
+      });
   }
 
   onCancel(): void {
+    if (this.submitting) return;
     this.closeDialog.emit();
   }
 
   onBackdropClick(event: MouseEvent): void {
+    if (this.submitting) return;
     // Only close if clicking directly on the backdrop, not on the dialog panel
     if ((event.target as HTMLElement).classList.contains('dialog-backdrop')) {
       this.closeDialog.emit();
@@ -129,7 +183,7 @@ export class AddStudentDialogComponent implements OnInit {
   }
 
   onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && !this.submitting) {
       this.closeDialog.emit();
     }
   }

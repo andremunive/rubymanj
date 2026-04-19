@@ -1,5 +1,6 @@
 import {
   Component,
+  HostListener,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -11,6 +12,7 @@ import {
   takeUntil,
 } from 'rxjs';
 
+import { ClientGoal, GOAL_LABELS } from '../../models/client-goal.model';
 import { ClientListItem } from '../../models/client-list-item.model';
 import { ClientsService } from '../../services/clients.service';
 
@@ -28,8 +30,19 @@ export class ClientsListComponent implements OnInit, OnDestroy {
   error: string | null = null;
   dialogOpen = false;
 
+  /** ID of the client whose row-menu is currently open, or null when closed. */
+  openMenuClientId: string | null = null;
+
+  /** Viewport coordinates for the open menu (anchored via position: fixed to escape overflow clipping). */
+  menuCoords: { top: number; left: number } | null = null;
+
   readonly pageSizeOptions = [10, 25, 50];
   readonly searchCtrl = new FormControl('');
+
+  /** Returns the Spanish label for a client's training goal. */
+  goalLabel(goal: ClientGoal): string {
+    return GOAL_LABELS[goal];
+  }
 
   private readonly destroy$ = new Subject<void>();
 
@@ -142,7 +155,43 @@ export class ClientsListComponent implements OnInit, OnDestroy {
 
   onDialogClose(): void {
     this.dialogOpen = false;
-    // Future: pass result from dialog and reload if a client was created
-    // this.loadClients();
+  }
+
+  onClientCreated(): void {
+    this.page = 1;
+    this.loadClients();
+  }
+
+  // ------------------------------------------------------------------ //
+  //  Row action menu                                                    //
+  // ------------------------------------------------------------------ //
+
+  toggleRowMenu(clientId: string, event: MouseEvent): void {
+    event.stopPropagation();
+
+    if (this.openMenuClientId === clientId) {
+      this.closeRowMenu();
+      return;
+    }
+
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.menuCoords = { top: rect.bottom + 4, left: rect.left };
+    this.openMenuClientId = clientId;
+  }
+
+  /** Closes the open row-menu when clicking anywhere outside a kebab button. */
+  @HostListener('document:click')
+  closeRowMenu(): void {
+    this.openMenuClientId = null;
+    this.menuCoords = null;
+  }
+
+  /** Close the menu on scroll/resize so it never detaches from its anchor. */
+  @HostListener('window:scroll')
+  @HostListener('window:resize')
+  onViewportChange(): void {
+    if (this.openMenuClientId !== null) {
+      this.closeRowMenu();
+    }
   }
 }

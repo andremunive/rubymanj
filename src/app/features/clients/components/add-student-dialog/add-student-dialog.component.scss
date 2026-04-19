@@ -102,6 +102,25 @@
     gap: 18px;
   }
 
+  &__submit-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.28);
+    border-radius: 10px;
+    color: #b91c1c;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    svg {
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+  }
+
   &__footer {
     display: flex;
     align-items: center;

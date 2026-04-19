@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { SupabaseService } from '../../../core/supabase/supabase.service';
 import {
   ClientListItem,
+  CreateClientInput,
   ListClientsParams,
   ListClientsResult,
   PaymentRaw,
@@ -39,6 +40,7 @@ export class ClientsService {
          phone,
          created_at,
          is_active,
+         goal,
          payments!payments_client_id_fkey(id, paid_on, due_date, amount, plans(code, name))`,
         { count: 'exact' }
       )
@@ -69,9 +71,69 @@ export class ClientsService {
     };
   }
 
+  /**
+   * Creates a new client by invoking the `trainer_create_client` RPC.
+   *
+   * The RPC creates the auth.users row and the profiles row atomically,
+   * forcing role='client' and must_change_password=true. Only trainers
+   * can call it (the RPC validates the role server-side).
+   *
+   * Throws a user-friendly Error whose message is safe to show in the UI.
+   */
+  async createClient(input: CreateClientInput): Promise<string> {
+    const { data, error } = await this.supabase.client.rpc(
+      'trainer_create_client',
+      {
+        p_email: input.email.trim(),
+        p_password: input.password,
+        p_full_name: input.fullName.trim(),
+        p_goal: input.goal,
+        p_phone: this.nullIfEmpty(input.phone),
+        p_birth_date: this.nullIfEmpty(input.birthDate),
+        p_notes: this.nullIfEmpty(input.notes),
+      }
+    );
+
+    if (error) {
+      throw new Error(this.mapCreateClientError(error.message));
+    }
+
+    return data as string;
+  }
+
   // ------------------------------------------------------------------ //
   //  Private helpers                                                    //
   // ------------------------------------------------------------------ //
+
+  /** Returns null when the value is missing or an empty/whitespace string. */
+  private nullIfEmpty(value: string | null | undefined): string | null {
+    if (value === null || value === undefined) return null;
+    const trimmed = value.trim();
+    return trimmed.length === 0 ? null : trimmed;
+  }
+
+  /**
+   * Translates Postgres errors raised by `trainer_create_client` into
+   * Spanish messages suitable for the dialog UI.
+   */
+  private mapCreateClientError(message: string): string {
+    if (message.includes('conflict:')) {
+      return 'Ya existe una alumna con ese correo electrónico.';
+    }
+    if (message.includes('not_authorized:')) {
+      return 'No tienes permisos para crear alumnas.';
+    }
+    if (message.includes('bad_input: email')) {
+      return 'El correo es obligatorio.';
+    }
+    if (message.includes('bad_input: full_name')) {
+      return 'El nombre es obligatorio.';
+    }
+    if (message.includes('bad_input: goal')) {
+      return 'El objetivo es obligatorio.';
+    }
+    return `No se pudo crear la alumna: ${message}`;
+  }
 
   /**
    * Maps a raw Supabase profile row (with nested payments) to
@@ -98,6 +160,7 @@ export class ClientsService {
       phone: row.phone,
       createdAt: row.created_at,
       isActive: row.is_active,
+      goal: row.goal,
       currentPlanName,
       planStatus,
       lastPaymentDate,

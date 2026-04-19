@@ -1,3 +1,5 @@
+import { ClientGoal } from './client-goal.model';
+
 /**
  * Represents a single row in the "Mis alumnas" table.
  * Derived from `profiles` joined with `payments` + `plans`.
@@ -9,6 +11,7 @@ export interface ClientListItem {
   phone: string | null;
   createdAt: string;        // ISO timestamp from profiles.created_at
   isActive: boolean;
+  goal: ClientGoal;         // Training objective — always set for clients
 
   // Derived from payments
   currentPlanName: string;  // Name of plan from latest payment, or 'Sin plan'
@@ -44,6 +47,7 @@ export interface ProfileRaw {
   phone: string | null;
   created_at: string;
   is_active: boolean;
+  goal: ClientGoal;
   payments: PaymentRaw[];
 }
 
@@ -58,4 +62,15 @@ export interface ListClientsParams {
 export interface ListClientsResult {
   items: ClientListItem[];
   total: number;
+}
+
+/** Payload for creating a new client via the trainer_create_client RPC. */
+export interface CreateClientInput {
+  fullName: string;
+  email: string;
+  password: string;
+  goal: ClientGoal;
+  phone?: string | null;
+  birthDate?: string | null; // 'YYYY-MM-DD'
+  notes?: string | null;
 }

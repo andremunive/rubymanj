@@ -327,9 +327,15 @@
 }
 
 /* Column widths */
-.col-check  { width: 40px; }
-.col-menu   { width: 40px; text-align: center; }
-.col-status { white-space: nowrap; }
+.col-check      { width: 40px; }
+.col-menu-start {
+  width: 32px;
+  padding-left: 4px !important;
+  padding-right: 0 !important;
+  text-align: center;
+}
+.col-menu-start + .col-alumna { padding-left: 6px !important; }
+.col-status     { white-space: nowrap; }
 
 /* Hide certain columns on tablet */
 @media (max-width: 1023px) {
@@ -363,6 +369,78 @@
 /* Dash for empty cells */
 .cell-dash {
   color: #d5d1cd; /* neutral-300 */
+}
+
+/* Row action menu (kebab + dropdown) */
+.row-menu-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.row-menu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 180px;
+  padding: 6px;
+  background: #ffffff;
+  border: 1px solid var(--ruby-border, #eadff0);
+  border-radius: 10px;
+  box-shadow:
+    0 12px 24px -8px rgba(42, 15, 61, 0.18),
+    0 0 0 1px rgba(203, 108, 230, 0.06);
+  animation: rowMenuIn 120ms ease-out;
+}
+
+@keyframes rowMenuIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.row-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--ruby-text, #28262a);
+  text-align: left;
+  white-space: nowrap;
+  transition: background 120ms, color 120ms;
+
+  svg { flex-shrink: 0; color: var(--ruby-text-soft, #78716c); }
+
+  &:hover {
+    background: var(--ruby-bg-lavender, #fbf4fd);
+    color: var(--ruby-primary-dark, #6b2d87);
+
+    svg { color: currentColor; }
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(203, 108, 230, 0.45);
+    outline-offset: 1px;
+  }
+}
+
+/* Objetivo pill */
+.goal-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: var(--ruby-bg-lavender, #fbf4fd);
+  color: var(--ruby-text-muted, #57534e);
+  border: 1px solid rgba(203, 108, 230, 0.22);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
 /* Kebab button */
