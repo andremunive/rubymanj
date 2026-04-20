@@ -8,7 +8,7 @@
 .trainer-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--ruby-bg-lavender);
+  background: #fbfbfb;
   position: relative;
 
   // ---- Overlay para mobile cuando el sidebar está abierto ----
@@ -73,7 +73,7 @@
 
   &__content {
     flex: 1;
-    background: var(--ruby-bg-lavender);
+    background: #fbfbfb;
     min-height: 0;
   }
 }
@@ -174,8 +174,9 @@
     }
 
     &--active {
-      background: linear-gradient(135deg, #f6e8fb 0%, #eddcf8 100%);
+      background: #f0efed;
       color: var(--ruby-primary-deep);
+      font-weight: 600;
     }
   }
 

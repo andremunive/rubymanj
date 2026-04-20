@@ -86,9 +86,9 @@
 
   &:not(:disabled):hover {
     transform: translateY(-2px);
-    border-color: #cb6ce6;
-    background: var(--ruby-bg-lavender, #fbf4fd);
-    box-shadow: 0 10px 24px -12px rgba(107, 45, 135, 0.28);
+    border-color: #d6d3d1;
+    background: #fafaf9;
+    box-shadow: 0 10px 24px -8px rgba(17, 17, 17, 0.08);
   }
 
   &:not(:disabled):focus-visible {
@@ -109,7 +109,7 @@
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: var(--ruby-bg-lavender, #fbf4fd);
+  background: var(--ruby-bg-lavender, #f5f4f2);
   color: #8c3da3;
   margin-bottom: 4px;
 }
@@ -158,7 +158,7 @@
   gap: 8px;
   flex: 1;
   min-width: 0;
-  background: var(--ruby-bg-lavender, #fbf4fd);
+  background: #fbfbfb;
   border: 1.5px solid var(--ruby-border, #e9e6e3);
   border-radius: 10px;
   padding: 9px 12px;
@@ -338,7 +338,7 @@
     transition: background 120ms;
 
     &:last-child { border-bottom: none; }
-    &:hover { background: #fbf4fd; }
+    &:hover { background: #f5f4f2; }
   }
 
   td {
@@ -390,7 +390,7 @@
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  background: var(--ruby-bg-lavender, #fbf4fd);
+  background: var(--ruby-bg-lavender, #f5f4f2);
   color: var(--ruby-text-muted, #57534e);
   border: 1px solid rgba(203, 108, 230, 0.22);
   border-radius: 999px;
@@ -447,7 +447,7 @@
   svg { flex-shrink: 0; color: var(--ruby-text-soft, #78716c); }
 
   &:hover {
-    background: var(--ruby-bg-lavender, #fbf4fd);
+    background: var(--ruby-bg-lavender, #f5f4f2);
     color: var(--ruby-primary-dark, #6b2d87);
     svg { color: currentColor; }
   }
@@ -482,7 +482,7 @@
   transition: background 120ms, color 120ms;
 
   &:hover {
-    background: var(--ruby-bg-lavender, #fbf4fd);
+    background: var(--ruby-bg-lavender, #f5f4f2);
     color: #57534e;
   }
 
@@ -622,7 +622,7 @@
   transition: background 120ms, color 120ms, border-color 120ms;
 
   &:hover:not(:disabled) {
-    background: var(--ruby-bg-lavender, #fbf4fd);
+    background: var(--ruby-bg-lavender, #f5f4f2);
     border-color: #cb6ce6;
     color: #8c3da3;
   }

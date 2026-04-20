@@ -8,7 +8,7 @@
 .client-layout {
   display: flex;
   min-height: 100vh;
-  background: var(--ruby-bg-lavender);
+  background: #fbfbfb;
 
   // ---- Sidebar: oculto en mobile, visible en desktop ----
   &__sidebar {
@@ -42,7 +42,7 @@
     flex: 1;
     // Espacio inferior para que el bottom nav no tape el contenido
     padding-bottom: 72px;
-    background: var(--ruby-bg-lavender);
+    background: #fbfbfb;
   }
 
   // ---- Bottom nav (mobile) ----
@@ -144,8 +144,9 @@
     }
 
     &--active {
-      background: linear-gradient(135deg, #f6e8fb 0%, #eddcf8 100%);
+      background: #f0efed;
       color: var(--ruby-primary-deep);
+      font-weight: 600;
     }
   }
 

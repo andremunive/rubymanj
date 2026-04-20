@@ -59,12 +59,12 @@ export type ButtonSize    = 'sm' | 'md' | 'lg';
     .btn--secondary {
       color: #6b2d87;
       background: #fff;
-      border: 1.5px solid #ecd9f2;
-      box-shadow: 0 2px 6px -2px rgba(107, 45, 135, 0.12);
+      border: 1.5px solid #e7e5e4;
+      box-shadow: 0 2px 6px -2px rgba(17, 17, 17, 0.08);
     }
     .btn--secondary:hover:not(:disabled) {
       transform: translateY(-1px);
-      background: #fbf4fd;
+      background: #f5f4f2;
     }
 
     .btn--ghost {
@@ -73,7 +73,7 @@ export type ButtonSize    = 'sm' | 'md' | 'lg';
       border: none;
     }
     .btn--ghost:hover:not(:disabled) {
-      background: rgba(203, 108, 230, 0.08);
+      background: #f5f4f2;
     }
 
     .btn--danger {
