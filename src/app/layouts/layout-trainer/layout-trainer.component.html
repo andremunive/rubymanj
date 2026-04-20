@@ -1,44 +1,24 @@
-<div class="trainer-layout" [class.trainer-layout--sidebar-open]="sidebarAbierto">
+<div class="trainer-layout">
 
-  <!-- Overlay mobile: aparece cuando el sidebar está abierto en pantallas pequeñas -->
-  <div
-    *ngIf="sidebarAbierto"
-    class="trainer-layout__overlay"
-    (click)="cerrarSidebarEnMobile()"
-    aria-hidden="true"
-  ></div>
+  <!-- ── Top toolbar ── -->
+  <header class="toolbar" role="banner">
 
-  <!-- Sidebar -->
-  <aside class="trainer-layout__sidebar" role="navigation" aria-label="Menú principal">
+    <!-- Brand -->
+    <a routerLink="/trainer" class="toolbar__brand" aria-label="Ir al inicio">
+      <app-logo [size]="18"></app-logo>
+    </a>
 
-    <div class="sidebar__header">
-      <a routerLink="/trainer" class="sidebar__brand" aria-label="Ir al inicio">
-        <app-logo [size]="18"></app-logo>
-      </a>
-      <button
-        class="sidebar__close-btn"
-        type="button"
-        (click)="toggleSidebar()"
-        aria-label="Cerrar menú"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    </div>
-
-    <nav class="sidebar__nav">
-      <ul class="sidebar__menu" role="list">
+    <!-- Main nav (desktop) -->
+    <nav class="toolbar__nav" role="navigation" aria-label="Menú principal">
+      <ul class="toolbar__menu" role="list">
         <li>
           <a
             routerLink="/trainer"
-            routerLinkActive="sidebar__link--active"
+            routerLinkActive="toolbar__link--active"
             [routerLinkActiveOptions]="{ exact: true }"
-            class="sidebar__link"
-            (click)="cerrarSidebarEnMobile()"
+            class="toolbar__link"
           >
-            <svg class="sidebar__link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="toolbar__link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
@@ -48,11 +28,10 @@
         <li>
           <a
             routerLink="/trainer/alumnas"
-            routerLinkActive="sidebar__link--active"
-            class="sidebar__link"
-            (click)="cerrarSidebarEnMobile()"
+            routerLinkActive="toolbar__link--active"
+            class="toolbar__link"
           >
-            <svg class="sidebar__link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="toolbar__link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
               <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -64,11 +43,10 @@
         <li>
           <a
             routerLink="/trainer/entrenamiento"
-            routerLinkActive="sidebar__link--active"
-            class="sidebar__link"
-            (click)="cerrarSidebarEnMobile()"
+            routerLinkActive="toolbar__link--active"
+            class="toolbar__link"
           >
-            <svg class="sidebar__link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <svg class="toolbar__link-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6.5 6.5 17.5 17.5"></path>
               <path d="m21 21-1-1"></path>
               <path d="m3 3 1 1"></path>
@@ -83,59 +61,145 @@
       </ul>
     </nav>
 
-    <div class="sidebar__footer">
-      <div class="sidebar__user" *ngIf="user">
-        <div class="sidebar__user-avatar" aria-hidden="true">
-          {{ user.fullName.charAt(0).toUpperCase() }}
-        </div>
-        <div class="sidebar__user-info">
-          <span class="sidebar__user-name">{{ user.fullName }}</span>
-          <span class="sidebar__user-role">Entrenadora</span>
+    <!-- Right side: user + mobile menu toggle -->
+    <div class="toolbar__right">
+
+      <!-- User dropdown (desktop ≥768px) -->
+      <div class="toolbar__user-wrapper" *ngIf="user">
+        <button
+          type="button"
+          class="toolbar__user-btn"
+          (click)="toggleUserMenu($event)"
+          [attr.aria-expanded]="userMenuAbierto"
+          aria-haspopup="menu"
+          aria-label="Abrir menú de usuario"
+        >
+          <span class="toolbar__user-avatar" aria-hidden="true">
+            {{ user.fullName.charAt(0).toUpperCase() }}
+          </span>
+          <span class="toolbar__user-name">{{ user.fullName }}</span>
+          <svg class="toolbar__user-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+
+        <div
+          *ngIf="userMenuAbierto"
+          class="toolbar__user-menu"
+          role="menu"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="toolbar__user-menu-header">
+            <span class="toolbar__user-menu-name">{{ user.fullName }}</span>
+            <span class="toolbar__user-menu-role">Entrenadora</span>
+          </div>
+          <button
+            type="button"
+            class="toolbar__user-menu-item"
+            role="menuitem"
+            (click)="logout()"
+            [disabled]="cerrando"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>{{ cerrando ? 'Saliendo…' : 'Cerrar sesión' }}</span>
+          </button>
         </div>
       </div>
-      <button
-        type="button"
-        class="sidebar__logout-btn"
-        (click)="logout()"
-        [disabled]="cerrando"
-        aria-label="Cerrar sesión"
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-          <polyline points="16 17 21 12 16 7"></polyline>
-          <line x1="21" y1="12" x2="9" y2="12"></line>
-        </svg>
-        <span>{{ cerrando ? 'Saliendo…' : 'Cerrar sesión' }}</span>
-      </button>
-    </div>
-  </aside>
 
-  <!-- Área principal -->
-  <div class="trainer-layout__main">
-    <!-- Topbar mobile -->
-    <header class="trainer-layout__topbar">
+      <!-- Mobile hamburger -->
       <button
-        class="topbar__menu-btn"
+        class="toolbar__menu-btn"
         type="button"
-        (click)="toggleSidebar()"
+        (click)="toggleMenu()"
         aria-label="Abrir menú"
-        [attr.aria-expanded]="sidebarAbierto"
+        [attr.aria-expanded]="menuAbierto"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg *ngIf="!menuAbierto" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="18" x2="21" y2="18"></line>
         </svg>
+        <svg *ngIf="menuAbierto" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
       </button>
-      <a routerLink="/trainer" class="topbar__brand" aria-label="Ir al inicio">
-        <app-logo [size]="16"></app-logo>
-      </a>
-      <div class="topbar__spacer" aria-hidden="true"></div>
-    </header>
 
-    <main class="trainer-layout__content" id="main-content">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div class="toolbar__mobile-drawer" *ngIf="menuAbierto" role="dialog" aria-label="Menú">
+      <nav class="mobile-drawer__nav" aria-label="Menú principal">
+        <ul class="mobile-drawer__menu" role="list">
+          <li>
+            <a
+              routerLink="/trainer"
+              routerLinkActive="mobile-drawer__link--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="mobile-drawer__link"
+              (click)="cerrarMenu()"
+            >
+              <span>Inicio</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/trainer/alumnas"
+              routerLinkActive="mobile-drawer__link--active"
+              class="mobile-drawer__link"
+              (click)="cerrarMenu()"
+            >
+              <span>Mis alumnas</span>
+            </a>
+          </li>
+          <li>
+            <a
+              routerLink="/trainer/entrenamiento"
+              routerLinkActive="mobile-drawer__link--active"
+              class="mobile-drawer__link"
+              (click)="cerrarMenu()"
+            >
+              <span>Entrenamiento</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-drawer__footer" *ngIf="user">
+        <div class="mobile-drawer__user">
+          <span class="mobile-drawer__user-avatar" aria-hidden="true">
+            {{ user.fullName.charAt(0).toUpperCase() }}
+          </span>
+          <div class="mobile-drawer__user-info">
+            <span class="mobile-drawer__user-name">{{ user.fullName }}</span>
+            <span class="mobile-drawer__user-role">Entrenadora</span>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="mobile-drawer__logout-btn"
+          (click)="logout()"
+          [disabled]="cerrando"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>{{ cerrando ? 'Saliendo…' : 'Cerrar sesión' }}</span>
+        </button>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- Main content -->
+  <main class="trainer-layout__content" id="main-content">
+    <router-outlet></router-outlet>
+  </main>
 
 </div>

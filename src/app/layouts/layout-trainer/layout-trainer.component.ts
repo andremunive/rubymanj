@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -12,7 +12,10 @@ import { AppUser } from '../../core/models/profile.model';
 })
 export class LayoutTrainerComponent implements OnInit, OnDestroy {
   user: AppUser | null = null;
-  sidebarAbierto = true;
+  /** True when the mobile collapsible menu is open. */
+  menuAbierto = false;
+  /** True when the user dropdown (avatar) is open. */
+  userMenuAbierto = false;
   cerrando = false;
 
   private readonly destroy$ = new Subject<void>();
@@ -35,15 +38,24 @@ export class LayoutTrainerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  toggleSidebar(): void {
-    this.sidebarAbierto = !this.sidebarAbierto;
+  toggleMenu(): void {
+    this.menuAbierto = !this.menuAbierto;
+    if (this.menuAbierto) this.userMenuAbierto = false;
   }
 
-  cerrarSidebarEnMobile(): void {
-    // Solo cerrar en mobile (ancho < 900px)
-    if (window.innerWidth < 900) {
-      this.sidebarAbierto = false;
-    }
+  cerrarMenu(): void {
+    this.menuAbierto = false;
+  }
+
+  toggleUserMenu(event: MouseEvent): void {
+    event.stopPropagation();
+    this.userMenuAbierto = !this.userMenuAbierto;
+    if (this.userMenuAbierto) this.menuAbierto = false;
+  }
+
+  @HostListener('document:click')
+  cerrarUserMenu(): void {
+    this.userMenuAbierto = false;
   }
 
   async logout(): Promise<void> {

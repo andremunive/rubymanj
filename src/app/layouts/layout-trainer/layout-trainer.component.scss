@@ -1,4 +1,4 @@
-/* ---- Layout Trainer: desktop-first, responsive ---- */
+/* ---- Layout Trainer: top toolbar + full-width content ---- */
 
 :host {
   display: block;
@@ -7,291 +7,406 @@
 
 .trainer-layout {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: #fbfbfb;
-  position: relative;
-
-  // ---- Overlay para mobile cuando el sidebar está abierto ----
-  &__overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(42, 15, 61, 0.35);
-    z-index: 30;
-    backdrop-filter: blur(2px);
-  }
-
-  // ---- Sidebar ----
-  &__sidebar {
-    width: 260px;
-    flex-shrink: 0;
-    background: #ffffff;
-    border-right: 1px solid var(--ruby-border);
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    z-index: 40;
-    transform: translateX(-100%);
-    transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 20px -4px rgba(107, 45, 135, 0.12);
-  }
-
-  &--sidebar-open &__sidebar {
-    transform: translateX(0);
-  }
-
-  &--sidebar-open &__overlay {
-    display: block;
-  }
-
-  // ---- Área principal ----
-  &__main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    margin-left: 0;
-    transition: margin-left 280ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  // ---- Topbar (visible en mobile, oculta en desktop) ----
-  &__topbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 16px;
-    height: 56px;
-    background: #ffffff;
-    border-bottom: 1px solid var(--ruby-border);
-    position: sticky;
-    top: 0;
-    z-index: 20;
-  }
 
   &__content {
     flex: 1;
-    background: #fbfbfb;
     min-height: 0;
+    background: #fbfbfb;
   }
 }
 
-/* ---- Desktop (≥900px): sidebar siempre visible ---- */
-@media (min-width: 900px) {
-  .trainer-layout {
-    &__overlay {
-      display: none !important;
-    }
+/* ============================================================
+   Toolbar
+   ============================================================ */
 
-    &__sidebar {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      transform: translateX(0) !important;
-    }
+.toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+  height: 60px;
+  padding: 0 20px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--ruby-border);
+  position: sticky;
+  top: 0;
+  z-index: 40;
 
-    &__main {
-      margin-left: 0;
-    }
-
-    &__topbar {
-      display: none;
-    }
-
-    &__content {
-      padding: 32px;
-    }
+  @media (min-width: 768px) {
+    padding: 0 32px;
+    height: 64px;
+    gap: 28px;
   }
 }
 
-/* ---- Sidebar: partes internas ---- */
+.toolbar__brand {
+  grid-column: 1;
+  justify-self: start;
+  text-decoration: none;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
 
-.sidebar {
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px 16px;
-    border-bottom: 1px solid var(--ruby-border);
+/* ---- Nav (desktop) ---- */
+
+.toolbar__nav {
+  grid-column: 2;
+  display: none;
+  justify-self: center;
+
+  @media (min-width: 768px) {
+    display: block;
   }
+}
 
-  &__brand {
-    text-decoration: none;
-    color: inherit;
-    display: inline-flex;
-  }
+.toolbar__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
-  &__close-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: transparent;
-    padding: 6px;
-    cursor: pointer;
-    color: var(--ruby-text-soft);
-    border-radius: 8px;
+.toolbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ruby-text-muted);
+  transition: background 140ms, color 140ms;
+  white-space: nowrap;
 
-    &:hover { background: var(--ruby-bg-lavender); color: var(--ruby-text); }
-
-    @media (min-width: 900px) {
-      display: none;
-    }
-  }
-
-  &__nav {
-    flex: 1;
-    padding: 16px 12px;
-    overflow-y: auto;
-  }
-
-  &__menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  &__link {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ruby-text-muted);
-    transition: background 140ms, color 140ms;
-
-    &:hover {
-      background: var(--ruby-bg-lavender);
-      color: var(--ruby-text);
-    }
-
-    &--active {
-      background: #f0efed;
-      color: var(--ruby-primary-deep);
-      font-weight: 600;
-    }
-  }
-
-  &__link-icon {
-    flex-shrink: 0;
-  }
-
-  &__footer {
-    padding: 16px;
-    border-top: 1px solid var(--ruby-border);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  &__user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-  }
-
-  &__user-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--ruby-primary-light), var(--ruby-primary));
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  &__user-info {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  &__user-name {
-    font-size: 13px;
-    font-weight: 600;
+  &:hover {
+    background: #f5f4f2;
     color: var(--ruby-text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
-  &__user-role {
-    font-size: 11px;
-    color: var(--ruby-text-soft);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  &__logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    padding: 9px 12px;
-    border: 1px solid var(--ruby-border);
-    background: transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ruby-text-muted);
-    font-family: var(--font-sans);
-    transition: background 140ms, color 140ms, border-color 140ms;
-
-    &:hover:not(:disabled) {
-      background: #fee2e2;
-      color: #b91c1c;
-      border-color: #fecaca;
-    }
-
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
+  &--active {
+    background: #f0efed;
+    color: var(--ruby-primary-deep);
+    font-weight: 600;
   }
 }
 
-/* ---- Topbar interno ---- */
+.toolbar__link-icon {
+  flex-shrink: 0;
+}
 
-.topbar {
-  &__menu-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: transparent;
-    padding: 6px;
-    cursor: pointer;
-    color: var(--ruby-text-muted);
-    border-radius: 8px;
-    flex-shrink: 0;
+/* ---- Right side (user + hamburger) ---- */
 
-    &:hover { background: var(--ruby-bg-lavender); color: var(--ruby-text); }
+.toolbar__right {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.toolbar__user-wrapper {
+  position: relative;
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.toolbar__user-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
+  border: 1px solid var(--ruby-border);
+  background: #ffffff;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--ruby-text);
+  font-family: inherit;
+  transition: background 140ms, border-color 140ms;
+
+  &:hover {
+    background: #f5f4f2;
+    border-color: var(--ruby-border-soft);
   }
 
-  &__brand {
-    text-decoration: none;
-    color: inherit;
-    display: inline-flex;
-    flex: 1;
-    justify-content: center;
+  &:focus-visible {
+    outline: 3px solid rgba(203, 108, 230, 0.4);
+    outline-offset: 2px;
+  }
+}
+
+.toolbar__user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ruby-primary-light), var(--ruby-primary));
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.toolbar__user-name {
+  font-size: 13px;
+  font-weight: 600;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toolbar__user-chevron {
+  color: var(--ruby-text-soft);
+  flex-shrink: 0;
+}
+
+.toolbar__user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  padding: 6px;
+  background: #ffffff;
+  border: 1px solid var(--ruby-border);
+  border-radius: 12px;
+  box-shadow:
+    0 14px 28px -10px rgba(17, 17, 17, 0.12),
+    0 0 0 1px rgba(17, 17, 17, 0.02);
+  animation: menuIn 120ms ease-out;
+  z-index: 50;
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.toolbar__user-menu-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px 8px;
+  border-bottom: 1px solid var(--ruby-border);
+  margin-bottom: 4px;
+}
+
+.toolbar__user-menu-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ruby-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toolbar__user-menu-role {
+  font-size: 11px;
+  color: var(--ruby-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toolbar__user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  color: var(--ruby-text);
+  text-align: left;
+  transition: background 120ms, color 120ms;
+
+  svg { flex-shrink: 0; color: var(--ruby-text-soft); }
+
+  &:hover:not(:disabled) {
+    background: #fee2e2;
+    color: #b91c1c;
+    svg { color: currentColor; }
   }
 
-  &__spacer {
-    width: 34px;
-    flex-shrink: 0;
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+/* ---- Mobile hamburger ---- */
+
+.toolbar__menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--ruby-text-muted);
+  transition: background 140ms, color 140ms;
+
+  &:hover { background: #f5f4f2; color: var(--ruby-text); }
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Mobile drawer (<768px)
+   ============================================================ */
+
+.toolbar__mobile-drawer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-bottom: 1px solid var(--ruby-border);
+  box-shadow: 0 12px 24px -12px rgba(17, 17, 17, 0.15);
+  padding: 12px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: drawerIn 180ms ease-out;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+@keyframes drawerIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-drawer__menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-drawer__link {
+  display: block;
+  padding: 12px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ruby-text-muted);
+  transition: background 140ms, color 140ms;
+
+  &:hover {
+    background: #f5f4f2;
+    color: var(--ruby-text);
+  }
+
+  &--active {
+    background: #f0efed;
+    color: var(--ruby-primary-deep);
+    font-weight: 600;
+  }
+}
+
+.mobile-drawer__footer {
+  padding-top: 12px;
+  border-top: 1px solid var(--ruby-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-drawer__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 2px;
+}
+
+.mobile-drawer__user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ruby-primary-light), var(--ruby-primary));
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mobile-drawer__user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.mobile-drawer__user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ruby-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mobile-drawer__user-role {
+  font-size: 11px;
+  color: var(--ruby-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mobile-drawer__logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--ruby-border);
+  background: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ruby-text-muted);
+  font-family: var(--font-sans);
+  transition: background 140ms, color 140ms, border-color 140ms;
+
+  &:hover:not(:disabled) {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fecaca;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
